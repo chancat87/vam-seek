@@ -307,7 +307,7 @@ Host `vam-seek.js` on your CDN:
 
 ```html
 <!-- jsDelivr (recommended) -->
-<script src="https://cdn.jsdelivr.net/gh/your-org/vam-seek@1.0.0/dist/vam-seek.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/unhaya/vam-seek@1.0.0/dist/vam-seek.js"></script>
 
 <!-- unpkg -->
 <script src="https://unpkg.com/vam-seek@1.0.0/dist/vam-seek.js"></script>
@@ -345,12 +345,13 @@ interface CellInfo {
 
 ## License
 
-MIT License - Free for commercial use.
+Free for personal, educational, and research use.
+Commercial use requires a paid license. Contact: info@haasiy.jp
 
 ## Support
 
-- GitHub Issues: https://github.com/your-org/vam-seek/issues
-- Documentation: https://your-org.github.io/vam-seek/
+- GitHub Issues: https://github.com/unhaya/vam-seek/issues
+- Documentation: https://unhaya.github.io/vam-seek/
 
 ---
 

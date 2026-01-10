@@ -9,7 +9,7 @@ Navigate videos visually with a thumbnail grid and smooth marker animation.
 
 ```html
 <!-- 1. Add the script -->
-<script src="https://cdn.jsdelivr.net/gh/your-org/vam-seek/dist/vam-seek.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/unhaya/vam-seek/dist/vam-seek.js"></script>
 
 <!-- 2. Connect to your video -->
 <script>
@@ -76,7 +76,7 @@ VAM_web/
 
 **CDN (Recommended)**
 ```html
-<script src="https://cdn.jsdelivr.net/gh/your-org/vam-seek/dist/vam-seek.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/unhaya/vam-seek/dist/vam-seek.js"></script>
 ```
 
 **npm**
@@ -196,7 +196,8 @@ function calculateTimestamp(x, y, gridWidth, gridHeight, duration, secondsPerCel
 
 ## License
 
-MIT License - Free for commercial use.
+Free for personal, educational, and research use.
+Commercial use requires a paid license. Contact: info@haasiy.jp
 
 ## Development History
 
