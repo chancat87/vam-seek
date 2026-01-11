@@ -71,6 +71,46 @@ VAM Seek works differently:
 
 All frame extraction happens in the user's browser using the Canvas API. When the page closes, everything is gone. No data is ever sent to any server.
 
+## Why 2D Grid Seek?
+
+**This is not a new feature. It's a missing standard.**
+
+### The Reality of Video Watching
+
+- 80-90%: Passive watching (1D seek bar is perfect)
+- 10-20%: "Where was that scene?" / "I want to see that again" / "Skip this part"
+
+The 1D seek bar excels at passive viewing. But for **active exploration**, it fails.
+
+### Why This Design Works
+
+| Principle | Implementation |
+|-----------|----------------|
+| Don't replace, supplement | 1D stays for normal use, 2D appears when needed |
+| Zero learning curve | One click to show, click thumbnail to jump |
+| Zero cognitive load | "Let me check" → Already visible |
+| Disappears when not needed | Closes naturally, no mode switching |
+
+### Why 1D Will Always Exist
+
+The 1D seek bar is:
+- Lightweight
+- Universally understood
+- Optimized for touch/mouse
+- Perfect for passive viewing
+
+**2D doesn't replace 1D. It handles what 1D cannot: exploration.**
+
+### The Mark of Standard UI
+
+Good UI has these properties:
+- Doesn't break existing workflows
+- Appears only when needed
+- Understood instantly
+- Missed when removed
+
+VAM Seek satisfies all four. Once you use it, going back feels incomplete.
+
 ## Directory Structure
 
 ```
