@@ -191,9 +191,6 @@
             // ② Reset scroll position to top
             this.container.scrollTop = 0;
 
-            // ③ Seek to center of first cell (0.5 cell offset)
-            this.seekTo(0.5 * this.secondsPerCell);
-
             this._extractAllFrames();
         }
 
@@ -225,13 +222,11 @@
             const cellIndex = row * this.columns + col;
             if (cellIndex >= this.state.totalCells) return;
 
-            // Move marker to cell center
-            const x = (col + 0.5) * this.state.cellWidth;
-            const y = (row + 0.5) * this.state.cellHeight;
+            const x = col * this.state.cellWidth;
+            const y = row * this.state.cellHeight;
             this._moveMarkerTo(x, y, true);
 
-            // Seek to cell center time (0.5 cell offset)
-            const time = (cellIndex + 0.5) * this.secondsPerCell;
+            const time = cellIndex * this.secondsPerCell;
             this.seekTo(time);
         }
 
@@ -491,9 +486,8 @@
 
         _initMarker() {
             this.marker.style.display = 'block';
-            // Initialize marker at the center of first cell
-            this.state.markerX = this.state.cellWidth * 0.5;
-            this.state.markerY = this.state.cellHeight * 0.5;
+            this.state.markerX = 0;
+            this.state.markerY = 0;
             this.state.targetX = this.state.markerX;
             this.state.targetY = this.state.markerY;
             this._updateMarkerPosition();
@@ -543,26 +537,20 @@
          */
         _calculatePositionFromTime(time) {
             if (this.state.totalCells === 0 || this.secondsPerCell <= 0) {
-                // Fallback: return center of first cell
-                return {
-                    x: this.state.cellWidth * 0.5,
-                    y: this.state.cellHeight * 0.5
-                };
+                return { x: 0, y: 0 };
             }
 
             const continuousCellIndex = time / this.secondsPerCell;
             let row = Math.floor(continuousCellIndex / this.columns);
             row = Math.max(0, Math.min(row, this.state.rows - 1));
 
-            // positionInRow is the column index (0 to columns-1 range, can be fractional)
             const positionInRow = continuousCellIndex - (row * this.columns);
-            // Convert to pixel position: (column_index + 0.5) * cellWidth (center of cell)
-            const x = (positionInRow + 0.5) * this.state.cellWidth;
-            const y = (row + 0.5) * this.state.cellHeight;
+            const x = positionInRow * this.state.cellWidth;
+            const y = row * this.state.cellHeight;
 
             return {
                 x: Math.max(0, Math.min(x, this.state.gridWidth)),
-                y: Math.max(this.state.cellHeight / 2, Math.min(y, this.state.gridHeight - this.state.cellHeight / 2))
+                y: Math.max(0, Math.min(y, this.state.gridHeight))
             };
         }
 
