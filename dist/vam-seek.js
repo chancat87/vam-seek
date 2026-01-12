@@ -179,10 +179,18 @@
             if (!this.video.duration) return;
 
             this.state.aborted = true;
+
+            // ① Clear frame cache for new video (keep only current video's cache)
+            this.frameCache.clear();
+
             this._calculateGridSize();
             this._renderGrid();
             this._updateGridDimensions();
             this._initMarker();
+
+            // ② Reset scroll position to top
+            this.container.scrollTop = 0;
+
             this._extractAllFrames();
         }
 
@@ -214,7 +222,8 @@
             const cellIndex = row * this.columns + col;
             if (cellIndex >= this.state.totalCells) return;
 
-            const x = col * this.state.cellWidth;
+            // ③ Move marker to cell center (both X and Y)
+            const x = (col + 0.5) * this.state.cellWidth;
             const y = (row + 0.5) * this.state.cellHeight;
             this._moveMarkerTo(x, y, true);
 
@@ -477,8 +486,9 @@
 
         _initMarker() {
             this.marker.style.display = 'block';
-            this.state.markerX = 0;
-            this.state.markerY = this.state.cellHeight / 2;
+            // ③ Initialize marker at the center of first cell
+            this.state.markerX = this.state.cellWidth * 0.5;
+            this.state.markerY = this.state.cellHeight * 0.5;
             this.state.targetX = this.state.markerX;
             this.state.targetY = this.state.markerY;
             this._updateMarkerPosition();
@@ -528,7 +538,11 @@
          */
         _calculatePositionFromTime(time) {
             if (this.state.totalCells === 0 || this.secondsPerCell <= 0) {
-                return { x: 0, y: this.state.cellHeight / 2 };
+                // ③ Fallback: return center of first cell
+                return {
+                    x: this.state.cellWidth * 0.5,
+                    y: this.state.cellHeight * 0.5
+                };
             }
 
             const continuousCellIndex = time / this.secondsPerCell;
