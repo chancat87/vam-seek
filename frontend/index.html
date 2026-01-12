@@ -1618,11 +1618,86 @@
         function moveRelative(dx, dy) {
             // マニュアル移動フラグを設定（追従を一時停止）
             setManualMoveFlag();
-            moveToCell(STATE.currentCellX + dx, STATE.currentCellY + dy);
+
+            // VAM準拠: ピクセル位置を保持しながらセル移動
+            // 現在のセル内小数位置を計算
+            const currentCellFractionalX = (STATE.targetX / STATE.cellWidth) - STATE.currentCellX;
+            const currentCellFractionalY = (STATE.targetY / STATE.cellHeight) - STATE.currentCellY;
+
+            let newCellX = STATE.currentCellX;
+            let newCellY = STATE.currentCellY;
+
+            // 左右移動の場合: 行ラップ処理（VAM準拠）
+            if (dx !== 0 && dy === 0) {
+                if (dx < 0) {
+                    // 左キー
+                    if (STATE.currentCellX > 0) {
+                        // 同じ行の前の列
+                        newCellX = STATE.currentCellX - 1;
+                        newCellY = STATE.currentCellY;
+                    } else if (STATE.currentCellY > 0) {
+                        // 前の行の最後の列にラップ
+                        newCellY = STATE.currentCellY - 1;
+                        newCellX = CONFIG.columns - 1;
+                        // 前の行の最後のセルが存在するか確認
+                        const targetIndex = newCellY * CONFIG.columns + newCellX;
+                        if (targetIndex >= STATE.totalCells) {
+                            newCellX = (STATE.totalCells - 1) % CONFIG.columns;
+                        }
+                    }
+                } else {
+                    // 右キー
+                    if (STATE.currentCellX < CONFIG.columns - 1) {
+                        const nextIndex = STATE.currentCellY * CONFIG.columns + STATE.currentCellX + 1;
+                        if (nextIndex < STATE.totalCells) {
+                            // 同じ行の次の列
+                            newCellX = STATE.currentCellX + 1;
+                            newCellY = STATE.currentCellY;
+                        } else if (STATE.currentCellY < STATE.totalRows - 1) {
+                            // 次の行の先頭にラップ
+                            newCellY = STATE.currentCellY + 1;
+                            newCellX = 0;
+                        }
+                    } else if (STATE.currentCellY < STATE.totalRows - 1) {
+                        // 次の行の先頭にラップ
+                        newCellY = STATE.currentCellY + 1;
+                        newCellX = 0;
+                    }
+                }
+            }
+            // 上下移動の場合: 通常の移動
+            else if (dy !== 0 && dx === 0) {
+                newCellY = STATE.currentCellY + dy;
+                newCellX = STATE.currentCellX;
+
+                // Y方向の境界チェック
+                if (newCellY < 0) {
+                    newCellY = 0;
+                } else if (newCellY >= STATE.totalRows) {
+                    newCellY = STATE.totalRows - 1;
+                }
+
+                // 総セル数チェック
+                const newCellIndex = newCellY * CONFIG.columns + newCellX;
+                if (newCellIndex >= STATE.totalCells) {
+                    const lastIndex = STATE.totalCells - 1;
+                    newCellY = Math.floor(lastIndex / CONFIG.columns);
+                    newCellX = lastIndex % CONFIG.columns;
+                }
+            }
+
+            // 新しいピクセル位置を計算（セル内小数位置を保持）
+            const newPixelX = (newCellX + currentCellFractionalX) * STATE.cellWidth;
+            const newPixelY = (newCellY + currentCellFractionalY) * STATE.cellHeight;
+
+            // ピクセル位置で移動（セル内位置を保持）
+            moveToPixelPosition(newPixelX, newPixelY, true);
+            seekVideoWithContinuousMode();
         }
 
         /**
          * マニュアル移動フラグを設定
+         * VAM準拠: 100msでフラグ解除（オリジナルは50-100ms）
          */
         function setManualMoveFlag() {
             STATE.isManuallyMoved = true;
@@ -1631,10 +1706,9 @@
             }
             STATE.manualMoveTimeout = setTimeout(() => {
                 STATE.isManuallyMoved = false;
-                // フラグ解除時に現在の行を同期してスクロールチェック
+                // フラグ解除時に現在の行を同期
                 STATE.previousRow = Math.floor(STATE.targetY / STATE.cellHeight);
-                scrollToMarker();
-            }, 500);
+            }, 100);
         }
 
         function scrollToMarker() {
@@ -1937,8 +2011,8 @@
         function handleVideoTimeUpdate() {
             const currentTime = elements.videoPlayer.currentTime;
 
-            // マニュアル移動中またはドラッグ中は追従しない
-            if (STATE.isManuallyMoved || STATE.isDragging) {
+            // ドラッグ中のみスキップ（isManuallyMovedではマーカー更新は続ける）
+            if (STATE.isDragging) {
                 elements.currentTime.textContent = formatTime(currentTime);
                 return;
             }
@@ -1975,9 +2049,9 @@
                     STATE._lastCellDebug = Date.now();
                 }
 
-                // スクロール（行が変わった時のみ）
+                // スクロール（行が変わった時のみ、かつマニュアル移動中でない場合）
                 const newRow = Math.floor(STATE.targetY / STATE.cellHeight);
-                if (newRow !== STATE.previousRow) {
+                if (newRow !== STATE.previousRow && !STATE.isManuallyMoved) {
                     scrollToMarker();
                     STATE.previousRow = newRow;
                 }
