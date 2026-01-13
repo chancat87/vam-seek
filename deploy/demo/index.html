@@ -464,7 +464,7 @@
                     <small>MP4, WebM, MOV supported</small><br>
                     <small style="color: #888">100% client-side processing</small>
                 </div>
-                <video id="videoPlayer" controls></video>
+                <video id="videoPlayer" controls playsinline webkit-playsinline></video>
             </div>
             <div class="control-bar">
                 <button type="button" class="btn" id="playBtn" disabled>▶ Play</button>
@@ -1343,6 +1343,7 @@
             // Grid interaction
             const grid = elements.thumbnailGrid;
 
+            // Mouse events
             grid.addEventListener('mousedown', e => {
                 e.preventDefault();
                 STATE.isDragging = true;
@@ -1361,6 +1362,27 @@
             });
 
             grid.addEventListener('click', handleGridClick);
+
+            // Touch events for mobile
+            grid.addEventListener('touchstart', e => {
+                e.preventDefault();
+                STATE.isDragging = true;
+                handleGridClick(e.touches[0]);
+            }, { passive: false });
+
+            grid.addEventListener('touchmove', e => {
+                if (STATE.isDragging) {
+                    e.preventDefault();
+                    handleGridClick(e.touches[0]);
+                }
+            }, { passive: false });
+
+            grid.addEventListener('touchend', () => {
+                if (STATE.isDragging) {
+                    STATE.isDragging = false;
+                    scrollToMarker();
+                }
+            });
 
             // Keyboard
             document.addEventListener('keydown', e => {
