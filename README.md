@@ -24,9 +24,7 @@ Navigate videos visually with a thumbnail grid instead of a 1D seek bar. Client-
 | Heavy infrastructure | Zero server load, ~15KB JS |
 | Complex integration | One-line setup |
 
-**Keywords:** video player, video seek, thumbnail grid, video navigation, HTML5 video, JavaScript library, video streaming, media player, video controls, video thumbnails, seek bar alternative, video UX
-
-## Quick Start (For External Sites)
+## Quick Start
 
 ```html
 <!-- 1. Add the script -->
@@ -55,10 +53,6 @@ That's it. See [docs/INTEGRATION.md](docs/INTEGRATION.md) for full documentation
 - **VAM algorithm** - Precise timestamp calculation
 - **Framework support** - React, Vue, vanilla JS examples included
 
-## 📰 Media Coverage
-
-- [VAM-Seek: Navegación Visual 2D para Videos sin Carga en Servidores](https://ecosistemastartup.com/vam-seek-navegacion-visual-2d-para-videos-sin-carga-en-servidores/) - Ecosistema Startup (Jan 2026)
-
 ## Privacy & Architecture
 
 **Your video never leaves the browser.**
@@ -77,99 +71,7 @@ VAM Seek works differently:
 
 All frame extraction happens in the user's browser using the Canvas API. When the page closes, everything is gone. No data is ever sent to any server.
 
-## Why 2D Grid Seek?
-
-**Long videos are no longer watched from start to finish.**
-
-We search. We go back. We verify.
-
-The UI for this just didn't exist.
-
-### The Reality of Video Watching
-
-- 80-90%: Passive watching (1D seek bar is perfect)
-- 10-20%: "Where was that scene?" / "I want to see that again" / "Skip this part"
-
-The 1D seek bar excels at passive viewing. But for **active exploration**, it fails.
-
-### Why This Design Works
-
-| Principle | Implementation |
-|-----------|----------------|
-| Don't replace, supplement | 1D stays for normal use, 2D appears when needed |
-| Zero learning curve | One click to show, click thumbnail to jump |
-| Zero cognitive load | "Let me check" → Already visible |
-| Disappears when not needed | Closes naturally, no mode switching |
-
-### Why 1D Will Always Exist
-
-The 1D seek bar is:
-- Lightweight
-- Universally understood
-- Optimized for touch/mouse
-- Perfect for passive viewing
-
-**2D doesn't replace 1D. It handles what 1D cannot: exploration.**
-
-### The Mark of Standard UI
-
-Good UI has these properties:
-- Doesn't break existing workflows
-- Appears only when needed
-- Understood instantly
-- Missed when removed
-
-VAM Seek satisfies all four. Once you use it, going back feels incomplete.
-
----
-
-> **Note:** This UI is based on a design concept I call **"Grid Seek Marker"** — a time-exploration interface where video becomes a 2D navigable space. VAM Seek is the implementation; Grid Seek Marker is the idea.
-
-## Directory Structure
-
-```
-VAM_web/
-├── dist/                       # Distributable files
-│   └── vam-seek.js             # Standalone library (1 file, ~15KB)
-│
-├── deploy/                     # Deployment files
-│   └── demo/                   # Live demo (embedded in landing page)
-│       ├── index.html          # Full-featured standalone demo
-│       └── demo.mp4            # Sample video
-│
-├── docs/                       # Documentation
-│   └── INTEGRATION.md          # API integration guide
-│
-├── examples/                   # Integration examples
-│   ├── basic-integration.html  # Vanilla JS example
-│   ├── react-integration.jsx   # React component & hook
-│   └── vue-integration.vue     # Vue 3 component
-│
-├── backend/                    # FastAPI backend (for development)
-│   ├── main.py                 # Entry point, static file serving
-│   ├── requirements.txt        # Python dependencies
-│   ├── core/                   # Core logic
-│   │   ├── grid_calc.py        # VAM grid calculation
-│   │   └── video_utils.py      # FFmpeg video processing
-│   ├── models/                 # Pydantic schemas
-│   │   └── schemas.py          # Request/response models
-│   ├── routers/                # API routers
-│   │   ├── grid.py             # /api/grid/* endpoints
-│   │   └── video.py            # /api/video/* endpoints
-│   ├── uploads/                # Uploaded videos (gitignore)
-│   └── thumbnails/             # Generated thumbnails (gitignore)
-│
-├── frontend/                   # Development frontend
-│   └── assets/
-│       └── marker.svg          # Grid marker icon
-│
-├── .gitignore
-└── README.md
-```
-
-## For Library Users
-
-### Installation Options
+## Installation
 
 **CDN (Recommended)**
 ```html
@@ -201,129 +103,7 @@ vam.configure({ columns: 8 }); // Update settings
 vam.destroy();             // Clean up
 ```
 
-### Configuration
-
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| `video` | HTMLVideoElement | required | Target video element |
-| `container` | HTMLElement | required | Container for the grid |
-| `columns` | number | 3 | Grid columns (3-10) |
-| `secondsPerCell` | number | 5 | Seconds per cell |
-| `cacheSize` | number | 200 | LRU cache size |
-| `onSeek` | function | null | Seek callback |
-
-## For Demo Development
-
-### Requirements
-
-- Python 3.9+
-- FFmpeg (in PATH)
-
-### Setup
-
-```bash
-cd backend
-pip install -r requirements.txt
-python main.py
-```
-
-Open `http://localhost:8000`
-
-### API Endpoints
-
-| Method | Path | Description |
-|--------|------|-------------|
-| GET | `/` | Serve frontend |
-| GET | `/api/health` | Health check |
-| POST | `/api/grid/config` | Calculate grid dimensions |
-| POST | `/api/grid/position` | Calculate timestamp from position |
-| POST | `/api/video/upload` | Upload video (demo only) |
-
-## Technical Details
-
-### Frame Extraction (Client-side)
-
-```javascript
-// 1. Create hidden video element
-const video = document.createElement('video');
-video.src = 'video.mp4';
-
-// 2. Seek to timestamp
-video.currentTime = 15.0;
-
-// 3. Capture on seeked event
-video.addEventListener('seeked', () => {
-  const canvas = document.createElement('canvas');
-  ctx.drawImage(video, 0, 0);
-  const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
-});
-
-// 4. Cache with LRU (max 200 frames per video)
-frameCache.put(timestamp, dataUrl);
-```
-
-### Multi-Video LRU Cache (2026-01-13)
-
-```javascript
-class VideoFrameCache {
-  constructor(maxVideos = 3, maxFramesPerVideo = 200) {
-    this.caches = new Map(); // videoUrl -> { frames: Map, complete: boolean }
-    this.maxVideos = maxVideos;
-    this.maxFramesPerVideo = maxFramesPerVideo;
-  }
-
-  setCurrentVideo(videoUrl) {
-    // LRU: Move existing video to end, or create new cache
-    if (this.caches.has(videoUrl)) {
-      const cache = this.caches.get(videoUrl);
-      this.caches.delete(videoUrl);
-      this.caches.set(videoUrl, cache);
-    } else {
-      if (this.caches.size >= this.maxVideos) {
-        const oldest = this.caches.keys().next().value;
-        this.caches.delete(oldest);
-      }
-      this.caches.set(videoUrl, { frames: new Map(), complete: false });
-    }
-  }
-
-  get(videoUrl, timestamp) {
-    const cache = this.caches.get(videoUrl);
-    return cache ? cache.frames.get(timestamp.toFixed(2)) : null;
-  }
-
-  put(videoUrl, timestamp, data) {
-    const cache = this.caches.get(videoUrl);
-    if (cache) cache.frames.set(timestamp.toFixed(2), data);
-  }
-
-  markComplete(videoUrl) {
-    const cache = this.caches.get(videoUrl);
-    if (cache) cache.complete = true;
-  }
-}
-
-// Usage: Keeps last 3 videos cached (600 frames total = ~3-6MB)
-const frameCache = new VideoFrameCache(3, 200);
-```
-
-**Benefits:**
-- Switch between videos without re-extracting frames
-- Automatic memory management (oldest video auto-deleted)
-- No race conditions when rapidly switching videos
-- Completion tracking per video
-
-### VAM Algorithm
-
-```javascript
-// X-continuous timestamp calculation
-function calculateTimestamp(x, y, gridWidth, gridHeight, duration, secondsPerCell) {
-  const rowIndex = Math.floor(y / gridHeight * rows);
-  const colContinuous = x / gridWidth * columns;
-  const cellIndex = rowIndex * columns + colContinuous;
-  return Math.min(cellIndex * secondsPerCell, duration);
-}
-```
+See [docs/INTEGRATION.md](docs/INTEGRATION.md) for full API documentation.
 
 ## Keyboard Shortcuts
 
@@ -361,8 +141,8 @@ Commercial use requires a paid license. Contact: info@haasiy.jp
 
 ## Credits
 
-Based on [VAM Desktop](https://github.com/unhaya/VAM-original) application algorithms:
-- `vam5.70/utils/video_utils.py` - calculate_x_continuous_timestamp
-- `vam5.70/gui/preview/core/grid_calculator.py` - GridCalculator
+Based on [VAM Desktop](https://github.com/unhaya/VAM-original) application algorithms.
 
-> **Note:** This is the original codebase—a 100k-line functional application built with raw effort. It's messy, but it was the foundation for VAM-Seek's 15KB condensation.
+## Media Coverage
+
+- [VAM Seek: 2D Visual Navigation for Videos Without Server Load](https://ecosistemastartup.com/vam-seek-navegacion-visual-2d-para-videos-sin-carga-en-servidores/) - Ecosistema Startup (Jan 2026)
