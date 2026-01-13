@@ -140,3 +140,4 @@ Based on [VAM Desktop](https://github.com/unhaya/VAM-original) application algor
 ## Media Coverage
 
 - [VAM Seek: 2D Visual Navigation for Videos Without Server Load](https://ecosistemastartup.com/vam-seek-navegacion-visual-2d-para-videos-sin-carga-en-servidores/) - Ecosistema Startup (Jan 2026)
+- [VAM Seek: Lightweight 2D Video Navigation Without Server Load](https://pulse-scope.ovidgame.com/2026-01-11-13-14/vam-seek-lightweight-2d-video-navigation-without-server-load) - Pulse Scope (Jan 2026)
