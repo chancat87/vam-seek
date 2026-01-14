@@ -459,6 +459,9 @@
             // Task-based abort management (like demo)
             const myTaskId = this.state.taskId;
             const targetVideoSrc = this.video.src;
+            // Capture config at task start (like demo's CONFIG)
+            const taskSecondsPerCell = this.secondsPerCell;
+            const taskTotalCells = this.state.totalCells;
 
             // Helper to check if this task is still valid
             const isTaskValid = () => this.state.taskId === myTaskId && this.video.src === targetVideoSrc;
@@ -475,23 +478,30 @@
                 // Check if task was cancelled
                 if (!isTaskValid()) return;
 
-                this.state.extractorVideo = await this._createExtractorVideo();
+                const newExtractorVideo = await this._createExtractorVideo();
 
                 // Check again after async operation
-                if (!isTaskValid() || !this.state.extractorVideo) {
-                    if (this.state.extractorVideo) {
-                        this.state.extractorVideo.remove();
-                        this.state.extractorVideo = null;
+                if (!isTaskValid()) {
+                    // Task was cancelled while loading - cleanup the video we just created
+                    if (newExtractorVideo) {
+                        newExtractorVideo.pause();
+                        newExtractorVideo.src = '';
+                        newExtractorVideo.remove();
                     }
                     return;
                 }
 
-                for (let i = 0; i < this.state.totalCells; i++) {
+                this.state.extractorVideo = newExtractorVideo;
+                if (!this.state.extractorVideo) {
+                    return;
+                }
+
+                for (let i = 0; i < taskTotalCells; i++) {
                     // Check if task was cancelled (cache is preserved)
                     if (!isTaskValid()) break;
 
                     // Extract thumbnail from center of cell (0.5 offset)
-                    const timestamp = (i + 0.5) * this.secondsPerCell;
+                    const timestamp = (i + 0.5) * taskSecondsPerCell;
                     const cell = this.grid.children[i];
                     if (!cell) continue;
 
