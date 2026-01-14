@@ -449,21 +449,6 @@
                 this.state.cellHeight = rect.height / this.state.rows;
                 this.state.gridGap = 2;
             }
-
-            // Debug: verify grid dimensions and gap
-            const gridStyle = getComputedStyle(this.grid);
-            const expectedHeight = this.state.rows * this.state.cellHeight + (this.state.rows - 1) * this.state.gridGap;
-            console.log('VAMSeek dimensions:', {
-                rows: this.state.rows,
-                cellHeight: this.state.cellHeight,
-                gridGap: this.state.gridGap,
-                gridGapRaw: gridStyle.gap,
-                rowGap: gridStyle.rowGap,
-                columnGap: gridStyle.columnGap,
-                gridHeight: this.state.gridHeight,
-                expectedHeight: expectedHeight,
-                diff: this.state.gridHeight - expectedHeight
-            });
         }
 
         // ==========================================
