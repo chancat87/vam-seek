@@ -43,15 +43,6 @@ https://github.com/user-attachments/assets/395ff2ec-0372-465c-9e42-500c138eb7aa
 
 That's it. See [docs/INTEGRATION.md](docs/INTEGRATION.md) for full documentation.
 
-## When You Need This
-
-Long videos you can't skip, but can't watch every second either.
-
-- Live streams, conferences, lectures
-- Surveillance, dashcam, body cam footage
-- Court depositions, meeting recordings
-- Any video where missing one moment matters
-
 ## Features
 
 - Client-side frame extraction (Canvas API, no server)
