@@ -43,6 +43,10 @@ https://github.com/user-attachments/assets/395ff2ec-0372-465c-9e42-500c138eb7aa
 
 That's it. See [docs/INTEGRATION.md](docs/INTEGRATION.md) for full documentation.
 
+### Alternative: Standalone Demo
+
+Want a ready-to-use page without integration? Download [deploy/demo/index.html](deploy/demo/index.html) - a single HTML file with all features built-in. No library import needed.
+
 ## Features
 
 - Client-side frame extraction (Canvas API, no server)
