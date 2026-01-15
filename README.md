@@ -5,7 +5,7 @@
 **Client-side only. Zero server cost. Zero privacy risk.**
 
 [![License: Dual](https://img.shields.io/badge/License-Dual%20(Free%20%2F%20Commercial)-blue.svg)](LICENSE)
-[![Size](https://img.shields.io/badge/Size-~36KB-green.svg)](dist/vam-seek.js)
+[![Size](https://img.shields.io/badge/Size-~43KB-green.svg)](dist/vam-seek.js)
 [![No Dependencies](https://img.shields.io/badge/Dependencies-None-brightgreen.svg)](#)
 [![Browser](https://img.shields.io/badge/Works%20in-All%20Modern%20Browsers-orange.svg)](#)
 
@@ -21,7 +21,7 @@ https://github.com/user-attachments/assets/395ff2ec-0372-465c-9e42-500c138eb7aa
 |---------------------|----------|
 | 1D timeline, trial-and-error | 2D grid, instant visual navigation |
 | Server-generated thumbnails | Client-side canvas extraction |
-| Heavy infrastructure | Zero server load, ~36KB JS |
+| Heavy infrastructure | Zero server load, ~43KB JS |
 | Complex integration | One-line setup |
 
 ## Quick Start
@@ -101,11 +101,11 @@ All frame extraction happens client-side using the Canvas API. When the page clo
 - Chrome 80+, Firefox 75+, Safari 14+, Edge 80+
 - Mobile browsers (iOS Safari, Chrome for Android)
 
-## The Evolution to 36KB
+## The Evolution to 43KB
 
 Wait, didn't I say 15KB before? Yes, I did. As a developer, I was obsessed with that 15KB. But after seeing over 10,000 people access this tool, I realized that my mission wasn't just to make it "small," but to make it "indispensable."
 
-I chose to **trade those 21KB for a significantly better user experience**:
+I chose to **trade those bytes for a significantly better user experience**:
 
 ### Multi-Video LRU Cache
 VAM Seek now "remembers" thumbnail grids for up to 3 videos. Switch back to a video you've seen, and the grid appears instantly. No re-extraction, no waiting.
@@ -118,7 +118,7 @@ The marker movement uses refined easing for that 60fps "buttery smooth" feel.
 
 ---
 
-Even at 36KB, it remains **ultra-lightweight**. This is the balance between "minimal code" and "maximum experience."
+Even at 43KB, it remains **ultra-lightweight**. This is the balance between "minimal code" and "maximum experience."
 
 ## License & Spirit
 
