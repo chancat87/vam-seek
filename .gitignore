@@ -51,3 +51,6 @@ docs/qiita-article.md
 
 # Local deployment (not for GitHub)
 deploy/lolipop/
+
+# Examples (outdated, use docs/INTEGRATION.md instead)
+examples/
