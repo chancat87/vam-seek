@@ -1297,20 +1297,32 @@
                 if (e.dataTransfer.files[0]) handleFileSelect(e.dataTransfer.files[0]);
             });
 
-            // Video events
+            // Video events - Independent position timer (v1.3.1)
+            // Bypasses timeupdate event irregularity for smooth marker movement
             let lastScrollTime = 0;
-            elements.videoPlayer.addEventListener('timeupdate', () => {
-                // Skip auto-update during manual marker movement (keyboard navigation)
-                if (STATE.manualMarkerMove) {
-                    updateDisplay();
-                    return;
-                }
-                if (!STATE.isDragging) {
-                    const pos = calculateMarkerPositionFromTime(elements.videoPlayer.currentTime);
-                    moveMarkerTo(pos.x, pos.y, true);
-                    updateDisplay();
+            let positionTimerId = null;
 
-                    // Auto-scroll to marker (throttled to every 500ms)
+            function startPositionTimer() {
+                if (positionTimerId) clearInterval(positionTimerId);
+                // 16ms interval = ~60fps - independent of timeupdate events
+                positionTimerId = setInterval(() => {
+                    if (!elements.videoPlayer.paused && !STATE.isDragging && !STATE.manualMarkerMove && STATE.totalCells > 0) {
+                        const pos = calculateMarkerPositionFromTime(elements.videoPlayer.currentTime);
+                        moveMarkerTo(pos.x, pos.y, true);
+                        updateDisplay();
+                    }
+                }, 16);
+            }
+
+            // Start position timer immediately
+            startPositionTimer();
+
+            // timeupdate now only handles auto-scroll (v1.3.1)
+            elements.videoPlayer.addEventListener('timeupdate', () => {
+                if (STATE.isDragging || STATE.manualMarkerMove) return;
+
+                // Auto-scroll to marker (throttled to every 500ms)
+                if (!elements.videoPlayer.paused) {
                     const now = Date.now();
                     if (now - lastScrollTime > 500) {
                         scrollToMarker();
