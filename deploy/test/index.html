@@ -125,6 +125,7 @@
                     <select id="scrollBehaviorSelect">
                         <option value="center" selected>Center-following</option>
                         <option value="edge">Edge-trigger</option>
+                        <option value="off">OFF</option>
                     </select>
                 </label>
             </div>
@@ -233,7 +234,7 @@
 
         scrollBehaviorSelect.addEventListener('change', () => {
             if (vamInstance) {
-                vamInstance.scrollBehavior = scrollBehaviorSelect.value;
+                vamInstance.setScrollMode(scrollBehaviorSelect.value);
                 statusText.textContent = `Scroll: ${scrollBehaviorSelect.value}`;
             }
         });
