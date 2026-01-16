@@ -78,27 +78,6 @@ vam.destroy();                // Clean up
 
 **Your video never leaves the browser.**
 
-```mermaid
-graph TD
-    User([User Action]) --> Input{Seek / Click}
-
-    subgraph Core_Logic [High-Speed Engine]
-        Input --> Cache{LRU Cache Hit?}
-        Cache -- "Yes (0ms)" --> Display[Instant Frame Display]
-        Cache -- "No" --> Extract[Canvas Frame Extraction]
-        Extract --> Save[Update Multi-Video Cache]
-        Save --> Display
-    end
-
-    subgraph Memory_Management [Resource Efficiency]
-        Save -.-> Evict[Auto Eviction of Old Videos]
-        Display --> Blob[Blob URL Storage]
-    end
-
-    style Display fill:#f96,stroke:#333,stroke-width:2px
-    style Cache fill:#69f,stroke:#333
-```
-
 All frame extraction happens client-side using the Canvas API. When the page closes, everything is gone. No data is ever sent to any server.
 
 | Traditional | VAM Seek |
