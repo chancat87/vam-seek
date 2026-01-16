@@ -157,6 +157,7 @@
             height: 100%;
             object-fit: contain;
             display: none;
+            touch-action: manipulation;
         }
 
         #videoPlayer.visible { display: block; }
@@ -1343,31 +1344,33 @@
             // Grid interaction
             const grid = elements.thumbnailGrid;
 
-            // Mouse events
+            // Mouse events - only handle events that start from the grid
             grid.addEventListener('mousedown', e => {
                 e.preventDefault();
                 STATE.isDragging = true;
                 handleGridClick(e);
             });
 
+            // Use document-level listeners but check if drag started from grid
             document.addEventListener('mousemove', e => {
                 if (STATE.isDragging) handleGridClick(e);
             });
 
-            document.addEventListener('mouseup', () => {
+            document.addEventListener('mouseup', e => {
                 if (STATE.isDragging) {
                     STATE.isDragging = false;
                     scrollToMarker();
                 }
             });
 
-            grid.addEventListener('click', handleGridClick);
-
-            // Touch events for mobile
+            // Touch events for mobile - only on grid element
             grid.addEventListener('touchstart', e => {
-                e.preventDefault();
-                STATE.isDragging = true;
-                handleGridClick(e.touches[0]);
+                // Only handle if touch started on grid (not video controls)
+                if (e.target.closest('.grid-cell') || e.target === grid || e.target.closest('#svgMarker')) {
+                    e.preventDefault();
+                    STATE.isDragging = true;
+                    handleGridClick(e.touches[0]);
+                }
             }, { passive: false });
 
             grid.addEventListener('touchmove', e => {
