@@ -148,8 +148,6 @@ For commercial licensing inquiries: haasiy@gmail.com
 
 - [VAM Seek × AI](https://github.com/unhaya/vam-seek-ai) - Chat with AI about your video. Ask "When does the red car appear?" and get the exact timestamp. The grid becomes AI's eyes. *Experimental*
 
-https://github.com/user-attachments/assets/77fb3661-4667-47d6-a4f1-3bae18653c51
-
 ## Credits
 
 Evolved from [VAM Desktop](https://github.com/unhaya/VAM-original).
