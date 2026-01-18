@@ -146,7 +146,7 @@ For commercial licensing inquiries: haasiy@gmail.com
 
 ## Examples
 
-- [VAM Seek × AI](https://github.com/unhaya/vam-seek-electron-demo) - Chat with AI about your video. Ask "When does the red car appear?" and get the exact timestamp. The grid becomes AI's eyes. *Experimental*
+- [VAM Seek × AI](https://github.com/unhaya/vam-seek-ai) - Chat with AI about your video. Ask "When does the red car appear?" and get the exact timestamp. The grid becomes AI's eyes. *Experimental*
 
 https://github.com/user-attachments/assets/77fb3661-4667-47d6-a4f1-3bae18653c51
 
