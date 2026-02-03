@@ -119,7 +119,7 @@ The marker movement uses refined easing for that 60fps "buttery smooth" feel.
 
 It remains **ultra-lightweight** with zero dependencies. This is the balance between "minimal code" and "maximum experience."
 
-[Test the library](https://haasiy.main.jp/vam_web/deploy/test/index.html) - Load your own video and try all features.
+[Test the library](https://haasiy.main.jp/vam_web/html/test.html) - Load your own video and try all features.
 
 ## License & Spirit
 
